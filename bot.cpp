@@ -4,7 +4,7 @@
 #include "image_generator.h"
 #include <dpp/dpp.h>
  
-const std::string BOT_TOKEN = "SECRET";
+const std::string BOT_TOKEN = "";
  
 int main() {
     dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
@@ -30,7 +30,7 @@ int main() {
                     event.edit_original_response(msg2);
                 }
             }catch(std::exception e){
-
+                std::cerr << e.what() << '\n';
             }
         }
     });

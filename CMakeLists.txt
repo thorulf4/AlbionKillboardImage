@@ -30,13 +30,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(dpp_fc)
 
-# add_compile_options(-fsanitize=address -fsanitize=undefined)
-# add_link_options(-fsanitize=address -fsanitize=undefined)
+add_compile_options(-fsanitize=address -fsanitize=undefined)
+add_link_options(-fsanitize=address -fsanitize=undefined)
         
 add_executable(bot bot.cpp image_generator.cpp albion_item.cpp utility.cpp price_evaluator.cpp)
-target_include_directories(bot PUBLIC SYSTEM ${OPENCV_CONFIG_FILE_INCLUDE_DIR} ${OPENCV_MODULE_opencv_core_LOCATION}/include)
+target_include_directories(bot SYSTEM PUBLIC )
 target_link_libraries(bot PRIVATE dpp opencv_core opencv_imgcodecs opencv_imgproc cpr::cpr)
-target_include_directories(bot PRIVATE SYSTEM
+target_include_directories(bot SYSTEM PRIVATE
         ${OPENCV_MODULE_opencv_imgcodecs_LOCATION}/include
         ${OPENCV_MODULE_opencv_imgproc_LOCATION}/include
-        )
+        ${OPENCV_CONFIG_FILE_INCLUDE_DIR}
+        ${OPENCV_MODULE_opencv_core_LOCATION}/include)

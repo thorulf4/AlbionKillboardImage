@@ -34,31 +34,22 @@ struct Fetch{
     std::string type;
     int quality;
     int session_id;
-    Fetch(std::string type, int quality, int session_id) : 
+    BatchHttpRequester& requester;
+    Fetch(std::string type, int quality, int session_id, BatchHttpRequester& requester) : 
         type{std::move(type)}, 
         quality{quality},
-        session_id{session_id}
+        session_id{session_id},
+        requester{requester}
     {}
 
-    cv::Mat get_response(ImageCache& image_cache);
+    cv::Mat get_response();
 };
 
 class ImageCache{
     std::unordered_map<std::pair<std::string, int>, cv::Mat, pair_hash> items;
-    cpr::MultiPerform http_performer;
-    std::vector<cpr::Response> responses;
-    int next_index = 0;
-
 public:
     ImageCache(std::string_view directory);
 
-    std::variant<cv::Mat, Fetch> get_image(const std::string& image_id, int quality);
-
-    void perform_sessions();
-
-    int register_session(std::shared_ptr<cpr::Session> session);
-
-    cpr::Response get_response(int session_id);
-
+    std::variant<cv::Mat, Fetch> get_image(const std::string& image_id, int quality, BatchHttpRequester& requester);
     void save_image(const std::string& image_id, int quality, cv::Mat mat);
 };

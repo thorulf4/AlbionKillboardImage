@@ -49,7 +49,11 @@ void put(const cv::Mat& src, cv::Mat& dest, int x, int y){
 void ItemPromise::apply(cv::Mat target){
     cv::Mat src = std::visit(overloaded{
         [&](cv::Mat mat){ return mat; },
-        [&](Fetch& fetch){ return fetch.get_response(images); }
+        [&](Fetch& fetch){ 
+            auto mat = fetch.get_response(); 
+            images.save_image(fetch.type, fetch.quality, mat);
+            return mat;
+        }
     }, image);
 
     auto item_resized = cv::Mat(121, 121, CV_8UC4);
@@ -74,7 +78,7 @@ void ImageGenerator::put_item(std::vector<ItemPromise>& items, json item, const 
         std::string item_id = item["Type"].get<std::string>();
         int quality = item["Quality"].get<int>();
 
-        auto img = image_cache->get_image(item_id, quality);
+        auto img = image_cache->get_image(item_id, quality, requester);
         if(price_getter) // Dirty hack reconsider this
             price_getter->add_item(std::move(item_id), quality, item["Count"].get<int>());
 
@@ -109,7 +113,10 @@ cv::Mat create_template(){
     put_text(base_image, "Victim", 1, {1000-gear.cols + 240, 22});
 
     cv::Mat fame_icon = cv::imread("fame.png", CV_8UC4);
-    put(fame_icon, base_image, 500-fame_icon.cols/2, 150);
+    put(fame_icon, base_image, 500-fame_icon.cols/2, 100);
+
+    cv::Mat silver_icon = cv::imread("silver.png", CV_8UC4);
+    put(silver_icon, base_image, 500-silver_icon.cols/2, 200);
 
     put(gear, base_image, 0, 0);
     put(gear, base_image, 1000 - gear.cols, 0);
@@ -134,8 +141,8 @@ cv::Mat ImageGenerator::generate(unsigned long long event_id){
     std::vector<ItemPromise> victim_items;
     put_items(victim_items, event.victim["Equipment"]);
 
-    price_getter->queue_requests(*image_cache);
-    image_cache->perform_sessions();
+    price_getter->queue_requests(requester);
+    requester.send_requests();
 
     Timer timer{"Generate image: "};
 
@@ -143,14 +150,14 @@ cv::Mat ImageGenerator::generate(unsigned long long event_id){
     base_image.copyTo(image);
 
     std::string fame = add_number_separator(event.fame);
-    put_text(image, fame, 0.7, {500, 225});
+    put_text(image, fame, 0.7, {500, 175});
 
     put_text(image, std::to_string(event.killer["AverageItemPower"].get<int>()) + "IP" , 0.75, {390, 440});
     put_text(image, std::to_string(event.victim["AverageItemPower"].get<int>()) + "IP", 0.75, {610, 440});
     put_text(image, event.killer["Name"].get<std::string>(), 0.7, {240, 45});
     put_text(image, event.victim["Name"].get<std::string>(), 0.7, {1000-gear_width + 240, 45});
 
-    int earnings = price_getter->get_price(*image_cache);
+    int earnings = price_getter->get_price(requester);
     std::string earnings_str = add_number_separator(earnings);
     put_text(image, earnings_str, 0.7, {500, 275});
 
@@ -160,5 +167,9 @@ cv::Mat ImageGenerator::generate(unsigned long long event_id){
         item.apply(image(cv::Rect{1000-gear_width,0,480,520}));
 
     cv::imwrite("tmp_image.png", image);
+
+    //Cleanup
+    requester.reset();
+
     return image;
 }

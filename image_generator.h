@@ -22,6 +22,7 @@ struct ItemPromise{
 class ImageGenerator{
     ImageCachePtr image_cache;
     std::unique_ptr<PriceCalculator> price_getter;
+    BatchHttpRequester requester;
     cv::Mat base_image;
     int gear_width;
 public:
