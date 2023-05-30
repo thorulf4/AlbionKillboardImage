@@ -4,9 +4,10 @@
 #include <vector>
 #include <variant>
 #include <opencv2/core.hpp>
-#include "albion_item.h"
-#include "price_evaluator.h"
-#include "json.hpp"
+#include <image/albion_item.h>
+#include <image/price_evaluator.h>
+#include <image/utility.h>
+#include <nlohmann/json.hpp>
 
 class ImageCache;
 using ImageCachePtr = std::unique_ptr<ImageCache>;

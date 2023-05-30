@@ -1,5 +1,6 @@
 #pragma once
-#include "albion_item.h"
+#include <image/albion_item.h>
+#include <image/utility.h>
 
 #include <string>
 #include <sstream>

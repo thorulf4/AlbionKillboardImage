@@ -5,8 +5,8 @@
 #include <sstream>
 #include <variant>
 
-#include "utility.h"
-#include "json.hpp" // nlohmann json
+#include <image/utility.h>
+#include <nlohmann/json.hpp>
 
 #include <cpr/cpr.h>
 #include <opencv2/core.hpp>

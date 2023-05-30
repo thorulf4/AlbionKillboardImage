@@ -11,10 +11,10 @@
 #include <variant>
 #include <memory>
 
-#include "json.hpp" // nlohmann json
-#include "image_generator.h"
-#include "albion_item.h"
-#include "utility.h"
+#include <nlohmann/json.hpp>
+#include <image/image_generator.h>
+#include <image/albion_item.h>
+#include <image/utility.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
