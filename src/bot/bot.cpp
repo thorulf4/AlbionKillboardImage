@@ -4,7 +4,7 @@
 #include <image/image_generator.h>
 #include <dpp/dpp.h>
  
-const std::string BOT_TOKEN = "MTA5ODI5NDk2MjM0NjUyODg5MA.GrfQp1.gvBCw04fYnlyGLaI0kgEsGqjwXlLY_dcF5sGZI";
+const std::string BOT_TOKEN = "...";
  
 int main() {
     dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
