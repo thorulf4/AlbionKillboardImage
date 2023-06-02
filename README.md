@@ -5,6 +5,7 @@ A C++ program to convert a Albion killboard link into a image summary using Open
 ## Image generator
 
 A image generation library that takes a killboard link like https://albiononline.com/killboard/kill/792676849 and turns it into an image summary.
+
 Features:
 - Item image caching
 - Gear price evaluation
