@@ -1,17 +1,50 @@
 #include <cstdlib>
 #include <iostream>
+#include <ranges>
+#include <concepts>
+#include <istream>
 
 #include <image/image_generator.h>
 #include <dpp/dpp.h>
+
+namespace views = std::ranges::views;
+
+template<typename T, typename Item>
+concept range = std::ranges::range<T> && std::same_as<Item, std::ranges::range_value_t<T>>;
+
+void print_help(){
+    std::cout << "A discord bot token must be provided.\n"
+              << "  -t, --token {discord token}\n"
+              << "  -f, --token-file {path to file}\n";
+}
+
+std::string handle_arguments(int argc, const char* argv[]){
+    for(int i = 1; i < argc; i++){
+        if(i + 2 > argc)
+            break;
+
+        if(std::strncmp("-f", argv[i], 2) == 0 || std::strncmp("--token-file", argv[i], 12) == 0){
+            std::string token;
+            std::ifstream file(argv[i+1]);
+            file >> token;
+            return token;
+        } else if(std::strncmp("-t", argv[i], 2) == 0 || std::strncmp("--token", argv[i], 7) == 0 ){
+            return argv[i+1];
+        }
+    }
+    
+    print_help();
+    std::exit(0);
+}
  
-const std::string BOT_TOKEN = "...";
- 
-int main() {
-    dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
+int main(int argc, const char* argv[]) {
+    std::string bot_token = handle_arguments(argc, argv);
+
+    dpp::cluster bot(bot_token, dpp::i_default_intents | dpp::i_message_content);
     // Save item images in items/ folder
     ImageGenerator img_gen{"items"};
 
-    bot.on_log(dpp::utility::cout_logger());
+    bot.on_log(dpp::utility ::cout_logger());
  
     bot.on_slashcommand([&](const dpp::slashcommand_t& event) {
          if (event.command.get_command_name() == "kill-image") {

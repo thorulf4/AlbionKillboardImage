@@ -15,7 +15,10 @@ Features:
 ## Discord integration
 Adds a slash command that allows users to create image summaries.
 
-Discord token must be supplied in the source code in `src/bot/bot.cpp`
+Discord token can be provided in two ways either directly in the terminal or stored in a separate file.
+`./bot --token my-secret`\
+`./bot --token-file secret-file`
+
 ![image](https://github.com/thorulf4/AlbionKillboardImage/assets/10059450/37393ad8-59f4-4e9c-a9f2-2ac5488597f0)
 
 ## Building
