@@ -166,10 +166,7 @@ cv::Mat ImageGenerator::generate(unsigned long long event_id){
     for(auto& item : victim_items)
         item.apply(image(cv::Rect{1000-gear_width,0,480,520}));
 
-    cv::imwrite("tmp_image.png", image);
-
     //Cleanup
     requester.reset();
-
     return image;
 }

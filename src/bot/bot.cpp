@@ -1,16 +1,9 @@
 #include <cstdlib>
 #include <iostream>
-#include <ranges>
-#include <concepts>
 #include <istream>
 
 #include <image/image_generator.h>
 #include <dpp/dpp.h>
-
-namespace views = std::ranges::views;
-
-template<typename T, typename Item>
-concept range = std::ranges::range<T> && std::same_as<Item, std::ranges::range_value_t<T>>;
 
 void print_help(){
     std::cout << "A discord bot token must be provided.\n"
@@ -57,7 +50,10 @@ int main(int argc, const char* argv[]) {
                     );
                     auto event_id_str = killboard_link.substr(40);
                     auto event_id = std::stoull(event_id_str.c_str());
-                    img_gen.generate(event_id);
+
+                    cv::Mat image = img_gen.generate(event_id);
+                    cv::imwrite("tmp_image.png", image);
+
                     auto msg2 = dpp::message{event.command.get_issuing_user().get_mention() + " has linked " + killboard_link};
                     msg2.add_file(event_id_str + "_summary.png", dpp::utility::read_file("tmp_image.png"));
                     event.edit_original_response(msg2);
