@@ -1,5 +1,7 @@
 # Albion Killboard Image
-A C++ program to convert a Albion killboard link into a image summary using OpenCV. Plus a discord integration
+A C++ program to convert a Albion killboard link into a image summary using OpenCV. Plus a discord integration.
+
+This repository has two components a Image generationg library and a discord integration.
 
 
 ## Image generator
@@ -16,11 +18,24 @@ Features:
 Adds a slash command that allows users to create image summaries.
 
 Discord token can be provided in two ways either directly in the terminal or stored in a separate file.
-`./bot --token my-secret`\
-`./bot --token-file secret-file`
+
+`./bot.sh --token my-secret`\
+`./bot.sh --token-file secret-file`
 
 ![image](https://github.com/thorulf4/AlbionKillboardImage/assets/10059450/37393ad8-59f4-4e9c-a9f2-2ac5488597f0)
 
-## Building
-Build using cmake, all dependencies should be fetched automatically.
-Note images in `resources` should be moved next to built executable (Will be handled with cmake install later)
+# Building
+This was tested using
+ - cmake 3.26.3
+ - g++ 12.1.0
+
+The library and discord integration can be built using cmake. 
+The code can be statically linked with the cmake option `-DBUILD_SHARED_LIBS=OFF`
+```
+cmake -B build -DBUILD_DISCORD_BOT=ON
+cmake --build build --target bot
+```
+Optionally you can install it although the executable name `bot`
+```
+cmake --install build --prefix ~/path-to-bot
+```
