@@ -32,6 +32,7 @@ This was tested using
 The library and discord integration can be built using cmake. 
 The code can be statically linked with the cmake option `-DBUILD_SHARED_LIBS=OFF`
 ```
+sudo apt install libssl-dev
 cmake -B build -DBUILD_DISCORD_BOT=ON
 cmake --build build --target bot
 ```
